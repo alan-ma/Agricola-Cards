@@ -3,9 +3,9 @@ import os
 
 
 # measurements in mm
-CARD_HEIGHT = 96
-SPACING = 2
-HORIZONTAL_SPACING = 65
+CARD_HEIGHT = 92
+SPACING = 0
+HORIZONTAL_SPACING = 59
 MARGIN = 10
 
 
@@ -13,7 +13,7 @@ class PDF(FPDF):
     # Page footer
     def footer(self):
         # Position at 1.5cm from bottom
-        self.set_y(-10)
+        self.set_y(-15)
         # Courier 8
         self.set_font('Courier', '', 8)
         # Page number
@@ -28,6 +28,7 @@ def chunks(lst, n):
 
 
 def main():
+    total = 0
     for deck in os.listdir('images'):
         # Landscape, pt units, Letter
         pdf = PDF('L', 'mm', 'Letter')
@@ -37,6 +38,8 @@ def main():
 
         images = os.listdir('images/%s' % deck)
         images = [image for image in images if image[-4:] == '.jpg']
+        total += len(images)
+        print("%d cards in deck %s" % (len(images), deck))
         for chunk in chunks(images, 8):
             pdf.add_page()
             for i, image in enumerate(chunk[:4]):
@@ -58,6 +61,7 @@ def main():
 
         # output to file
         pdf.output('output/%s.pdf' % deck, 'F')
+    print("%d total cards" % total)
 
 
 if __name__ == '__main__':
